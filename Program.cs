@@ -199,9 +199,9 @@ class Program
         //}
 
 
-        sb.Clear();
+        //sb.Clear();
         //sb.Append("THETABTC:THETAETH:ETHBTC;");
-        sb.Append("LINKBTC:LINKETH:ETHBTC;");
+        //sb.Append("LINKBTC:LINKETH:ETHBTC;");
         //sb.Append("FETBTC:FETETH:ETHBTC;");
         //sb.Append("XMRBTC:XMRETH:ETHBTC;");
         //sb.Append("ETHBTC:XMRETH:XMRBTC;");
@@ -359,7 +359,7 @@ class Program
     {
         Logger.log("START " + obj.ToString());
         String[] pairs = obj.ToString().Split(':');
-        decimal initialValue = 0.003m;
+        
 
         while (true)
         {
@@ -381,7 +381,7 @@ class Program
                     Console.Title = dsSearch.Tables[0].Rows.Count.ToString() + " search pairs";
                 }
 
-                if (ret.perc > 0.35m && ok)
+                if (ret.perc > percValue && ok)
                 {
 
                     Console.BackgroundColor = ConsoleColor.Green;
@@ -724,6 +724,9 @@ class Program
         return 0;
     }
 
+    static decimal initialValue = 0;
+    static decimal percValue = 0;
+
     static void config()
     {
         String configJson = System.IO.File.ReadAllText(location + "config.json");
@@ -731,6 +734,8 @@ class Program
 
         Key.key = jContainer["key"].ToString();
         Key.secret= jContainer["secret"].ToString();
+        initialValue = decimal.Parse( jContainer["initialValue"].ToString(),System.Globalization.NumberStyles.Float);
+        percValue = decimal.Parse(jContainer["percValue"].ToString(), System.Globalization.NumberStyles.Float);
     }
 
 
