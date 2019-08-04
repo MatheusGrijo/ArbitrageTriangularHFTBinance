@@ -13,7 +13,7 @@
  No final terei 0.00301 BTC ou seja acabei lucrando pela deficiencia do mercado.
  
 Configuração:
-Criar um arquivo JSON na pasta do executavel com o nome "config.json", conteudo para configuracao:
+Criar um arquivo JSON na pasta "c:\bot\" com o nome "config.json", conteudo para configuracao:
 initialValue é o total de BTC que você irá fazer por ordem(recomendo no minimo o equivalante a 10 dolares).
 percValue valor de lucro no qual ele irá realizar a arbitragem(recomendo o superior as 3 taxas somadas no caso acima maior que 0.3, default 0.35)
 
