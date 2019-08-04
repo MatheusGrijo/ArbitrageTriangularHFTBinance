@@ -383,6 +383,7 @@ class Program
                 {
                     dsSearch.Tables["Symbol"].Rows.Add(obj.ToString());
                     Console.Title = dsSearch.Tables[0].Rows.Count.ToString() + " search pairs";
+                    Logger.trade(obj.ToString());
                 }
 
                 if (ret.perc > percValue && ok)
@@ -691,8 +692,8 @@ class Program
     {
         markets = getArrayTriangularArbitrage();
 
-        //new Thread(initializeSockets).Start();
-        initializeSockets();
+        new Thread(initializeSockets).Start();
+        
 
         try
         {

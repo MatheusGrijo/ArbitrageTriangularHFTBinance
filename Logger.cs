@@ -31,14 +31,14 @@ public class Logger
     {
         value = "[" + DateTime.Now.ToString() + "] - " + value;
         Console.WriteLine(value);
-        //lock (objLock)
-        //{
-        //    System.IO.StreamWriter w = new StreamWriter(@"C:\bot\" + prefix + "trade.txt", true);
-        //    w.WriteLine(value);
-        //    w.Close();
-        //    w.Dispose();
-        //    w = null;
-        //}
+        lock (objLock)
+        {
+            System.IO.StreamWriter w = new StreamWriter(@"C:\bot\" + prefix + "trade.txt", true);
+            w.WriteLine(value);
+            w.Close();
+            w.Dispose();
+            w = null;
+        }
     }
     public static void triangle(string value)
     {
