@@ -56,10 +56,10 @@ class Program
     public static string[] getArrayTriangularArbitrage()
     {
         StringBuilder sb = new StringBuilder();
+        String market = null;
 
 
-
-        String market = "ETH";
+        market = "ETH";
         foreach (var item in ExchangeBinance.exchangeInfo["symbols"])
         {
             String pairs = market + "BTC:";
@@ -155,54 +155,34 @@ class Program
         }
 
 
-        //market = "BTC";
-        //foreach (var item in ExchangeBinance.exchangeInfo["symbols"])
-        //{
-        //    String pairs = "";
-        //    bool add = false;
-        //    if (item["symbol"].ToString().Substring(item["symbol"].ToString().Length - 3, 3) == market)
-        //    {
-        //        pairs += item["symbol"].ToString() + ":";
-        //        String auxPair = item["symbol"].ToString().Replace(market, "");
-        //        foreach (var item2 in ExchangeBinance.exchangeInfo["symbols"])
-        //        {
-        //            if (item2["symbol"].ToString() == auxPair + "USDT")
-        //            {
-        //                add = true;
-        //                pairs += item2["symbol"].ToString() + ":";
-        //                pairs += "BTCUSDT;";
-        //            }
-        //        }
-        //    }
-        //    if (add)
-        //        sb.Append(pairs);
-        //}
+        market = "BTC";
+        foreach (var item in ExchangeBinance.exchangeInfo["symbols"])
+        {
+            String pairs = "";
+            bool add = false;
+            if (item["symbol"].ToString().Substring(item["symbol"].ToString().Length - 3, 3) == market)
+            {
+                pairs += item["symbol"].ToString() + ":";
+                String auxPair = item["symbol"].ToString().Replace(market, "");
+                foreach (var item2 in ExchangeBinance.exchangeInfo["symbols"])
+                {
+                    if (item2["symbol"].ToString() == auxPair + "USDT")
+                        if (item2["status"].ToString().Trim().ToUpper() == "TRADING")
+                        {
+                            add = true;
+                            pairs += item2["symbol"].ToString() + ":";
+                            pairs += "BTCUSDT;";
+                        }
+                }
+            }
+            if (add)
+                sb.Append(pairs);
+        }
 
-        //market = "BTC";
-        //foreach (var item in ExchangeBinance.exchangeInfo["symbols"])
-        //{
-        //    String pairs = "";
-        //    bool add = false;
-        //    if (item["symbol"].ToString().Substring(item["symbol"].ToString().Length - 3, 3) == market)
-        //    {
-        //        pairs += item["symbol"].ToString() + ":";
-        //        String auxPair = item["symbol"].ToString().Replace(market, "");
-        //        foreach (var item2 in ExchangeBinance.exchangeInfo["symbols"])
-        //        {
-        //            if (item2["symbol"].ToString() == auxPair + "PAX")
-        //            {
-        //                add = true;
-        //                pairs += item2["symbol"].ToString() + ":";
-        //                pairs += "BTCPAX;";
-        //            }
-        //        }
-        //    }
-        //    if (add)
-        //        sb.Append(pairs);
-        //}
 
 
         //sb.Clear();
+        //sb.Append("XRPBTC:XRPUSDT:BTCUSDT;");
         //sb.Append("THETABTC:THETAETH:ETHBTC;");
         //sb.Append("LINKBTC:LINKETH:ETHBTC;");
         //sb.Append("FETBTC:FETETH:ETHBTC;");
@@ -277,50 +257,30 @@ class Program
                 return arbTriangle;
 
             }
-            //else if (pairs[2] == "BTCUSDT" || pairs[2] == "BTCPAX")
-            //{
+            else if (pairs[2] == "BTCUSDT")
+            {
+                //XRPBTC BUY
+                //XRPUSDT SELL
+                //BTCUSDT BUY
 
-            //    //BUY                
-            //    decimal[] buy = binance.getLowestAskAmount(pairs[0], initialValue);
-            //    decimal amountBuy = buy[0];
+                //BUY                
+                arbTriangle.amount1 = Math.Round(exchangeBinance.getBook(pairs[0], initialValue, "asks", "buy"), 8);
 
+                //CHANGE                
+                arbTriangle.amount2 = Math.Round(exchangeBinance.getBook(pairs[1], arbTriangle.amount1, "bids", "sell", false), 8);
 
-            //    arbTriangle.amount1 = amountBuy;
-            //    arbTriangle.amount1Fee = decreaseFee(amountBuy, pairs[0]);
+                //SELL                
+                arbTriangle.finalvalue = Math.Round(exchangeBinance.getBook(pairs[2], arbTriangle.amount2, "asks", "buy"), 8);
 
-            //    //amountBuy = Math.Round(amountBuy / ExchangeBinance.getQuantity(pairs[0])) * ExchangeBinance.getQuantity(pairs[0]);
-            //    //amountBuy = Math.Round(amountBuy, ExchangeBinance.getQuotePrecision(pairs[0]));
+                //Report
+                decimal perc = Math.Round((((arbTriangle.finalvalue * 100) / initialValue) - 100), 5);
 
+                arbTriangle.perc = perc;
 
-            //    //CHANGE                
-            //    decimal[] change = binance.getHighestBid(pairs[1], arbTriangle.amount1Fee);
-            //    decimal amountChange = arbTriangle.amount1Fee * change[0];
-            //    amountChange = Math.Round(amountChange, 8);
+                Console.WriteLine(Math.Round(perc, 2) + "% | " + pairs[0].ToString() + "(" + arbTriangle.amount1 + ") - " + pairs[1].ToString() + "(" + arbTriangle.amount2 + ") - " + pairs[2].ToString() + "(" + arbTriangle.finalvalue + ")");
+                return arbTriangle;
 
-
-            //    //amountChange = Math.Round(amountChange / ExchangeBinance.getQuantity(pairs[1])) * ExchangeBinance.getQuantity(pairs[1]);
-            //    //amountChange = Math.Round(amountChange, ExchangeBinance.getQuotePrecision(pairs[1]));
-
-
-            //    arbTriangle.amount2 = amountChange;
-            //    arbTriangle.amount2Fee = decreaseFee(amountChange, pairs[1]);
-
-            //    //SELL                
-            //    decimal[] sell = binance.getHighestBid(pairs[2], arbTriangle.amount2Fee);
-            //    decimal finalValue = arbTriangle.amount2Fee / sell[0];
-
-
-            //    arbTriangle.finalvalue = finalValue;
-
-
-            //    //Report
-            //    decimal perc = Math.Round((((arbTriangle.finalvalue * 100) / initialValue) - 100), 5);
-
-            //    arbTriangle.perc = perc;
-
-            //    Console.WriteLine(Math.Round(perc, 2) + "% | " + pairs[0].ToString() + " - " + pairs[1].ToString() + pairs[2].ToString());
-            //    return arbTriangle;
-            //}
+            }
             else
             {
 
@@ -581,11 +541,11 @@ class Program
 
         ds.Tables["Symbol"].Clear();
         loadDataDetailSocket("btcusdt");
-        loadDataDetailSocket("ethbtc");        
-        loadDataDetailSocket("bnbbtc");        
-        loadDataDetailSocket("bnbeth");        
+        loadDataDetailSocket("ethbtc");
+        loadDataDetailSocket("bnbbtc");
+        loadDataDetailSocket("bnbeth");
         loadDataDetailSocket("ethbnb");
-        
+
 
         ds.Tables["Symbol"].Rows.Add("ethbtc");
         ds.Tables["Symbol"].Rows.Add("bnbbtc");
