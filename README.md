@@ -26,4 +26,5 @@ percValue valor de lucro no qual ele irá realizar a arbitragem(recomendo o supe
  initialValue: 0.003,
  
  percValue: 0.35
+ 
 }
