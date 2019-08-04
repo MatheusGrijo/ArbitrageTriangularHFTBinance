@@ -21,7 +21,7 @@ class Program
     static BinanceClient binanceClient = new BinanceClient();
     static BinanceSocketClient binanceSocketClient = new BinanceSocketClient();
     static List<BinanceStreamBalance> balances = null;
-               
+
 
     public static System.Collections.ArrayList array = new System.Collections.ArrayList();
     static System.Data.DataSet dsSearch = new System.Data.DataSet();
@@ -58,7 +58,7 @@ class Program
     {
         StringBuilder sb = new StringBuilder();
 
-        
+
 
         String market = "ETH";
         foreach (var item in ExchangeBinance.exchangeInfo["symbols"])
@@ -72,10 +72,11 @@ class Program
                 foreach (var item2 in ExchangeBinance.exchangeInfo["symbols"])
                 {
                     if (item2["symbol"].ToString() == auxPair + "BTC")
-                    {
-                        add = true;
-                        pairs += item2["symbol"].ToString() + ";";
-                    }
+                        if (item2["status"].ToString().Trim().ToUpper() == "TRADING")
+                        {
+                            add = true;
+                            pairs += item2["symbol"].ToString() + ";";
+                        }
                 }
             }
             if (add)
@@ -94,7 +95,8 @@ class Program
                 foreach (var item2 in ExchangeBinance.exchangeInfo["symbols"])
                 {
                     if (item2["symbol"].ToString() == auxPair + "BTC")
-                    {
+                        if (item2["status"].ToString().Trim().ToUpper() == "TRADING")
+                        {
                         add = true;
                         pairs += item2["symbol"].ToString() + ";";
                     }
@@ -117,7 +119,8 @@ class Program
                 foreach (var item2 in ExchangeBinance.exchangeInfo["symbols"])
                 {
                     if (item2["symbol"].ToString() == auxPair + "ETH")
-                    {
+                        if (item2["status"].ToString().Trim().ToUpper() == "TRADING")
+                        {
                         add = true;
                         pairs += item2["symbol"].ToString() + ":";
                         pairs += "ETHBTC;";
@@ -140,7 +143,8 @@ class Program
                 foreach (var item2 in ExchangeBinance.exchangeInfo["symbols"])
                 {
                     if (item2["symbol"].ToString() == auxPair + "BNB")
-                    {
+                        if (item2["status"].ToString().Trim().ToUpper() == "TRADING")
+                        {
                         add = true;
                         pairs += item2["symbol"].ToString() + ":";
                         pairs += "BNBBTC;";
@@ -213,7 +217,7 @@ class Program
         return MyRandomArray;
     }
 
-  
+
 
 
     /// <summary>
@@ -260,10 +264,10 @@ class Program
                 arbTriangle.amount1 = Math.Round(exchangeBinance.getBook(pairs[0], initialValue, "asks", "buy"), 8);
 
                 //CHANGE                
-                arbTriangle.amount2 = Math.Round(exchangeBinance.getBook(pairs[1], arbTriangle.amount1, "bids", "sell",false), 8);
+                arbTriangle.amount2 = Math.Round(exchangeBinance.getBook(pairs[1], arbTriangle.amount1, "bids", "sell", false), 8);
 
                 //SELL                
-                arbTriangle.finalvalue = Math.Round(exchangeBinance.getBook(pairs[2], arbTriangle.amount2, "bids", "sell",false), 8);
+                arbTriangle.finalvalue = Math.Round(exchangeBinance.getBook(pairs[2], arbTriangle.amount2, "bids", "sell", false), 8);
 
                 //Report
                 decimal perc = Math.Round((((arbTriangle.finalvalue * 100) / initialValue) - 100), 5);
@@ -332,7 +336,7 @@ class Program
                 arbTriangle.amount2 = Math.Round(exchangeBinance.getBook(pairs[1], arbTriangle.amount1, "asks", "buy"), 8);
 
                 //SELL                
-                arbTriangle.finalvalue = Math.Round(exchangeBinance.getBook(pairs[2], arbTriangle.amount2, "bids", "sell",false), 8);
+                arbTriangle.finalvalue = Math.Round(exchangeBinance.getBook(pairs[2], arbTriangle.amount2, "bids", "sell", false), 8);
 
                 //Report
                 decimal perc = Math.Round((((arbTriangle.finalvalue * 100) / initialValue) - 100), 5);
@@ -359,7 +363,7 @@ class Program
     {
         Logger.log("START " + obj.ToString());
         String[] pairs = obj.ToString().Split(':');
-        
+
 
         while (true)
         {
@@ -369,7 +373,7 @@ class Program
                 ArbTriangle ret = verifyOrderBook(pairs, initialValue);
                 if (ret.perc > 0)
                 {
-                    Logger.log("************ || " +  obj.ToString() + "||" + ret.perc + "||" + DateTime.Now.ToString());
+                    Logger.log("************ || " + obj.ToString() + "||" + ret.perc + "||" + DateTime.Now.ToString());
                 }
                 bool insert = true;
                 for (int x = 0; x < dsSearch.Tables["Symbol"].Rows.Count; x++)
@@ -543,7 +547,7 @@ class Program
                                         System.Threading.Thread.Sleep(120000);
 
 
-                                      
+
                                     }
                                 }
                             }
@@ -668,9 +672,9 @@ class Program
             if (successOrderBook.Error != null)
                 Logger.log("Error " + successOrderBook.Error.ToString());
             //if (successOrderBook.Data != null)
-              //  Logger.log("Data " + successOrderBook.Data.ToString());
+            //  Logger.log("Data " + successOrderBook.Data.ToString());
 
-      
+
 
         }
         catch (Exception ex)
@@ -716,11 +720,11 @@ class Program
 
     static decimal getBalance(string pair)
     {
-        if (balances != null)        
-            foreach (var item in balances)            
-                if (item.Asset.Trim().ToUpper() == pair.Trim().ToUpper())                
+        if (balances != null)
+            foreach (var item in balances)
+                if (item.Asset.Trim().ToUpper() == pair.Trim().ToUpper())
                     return item.Free;
-                
+
         return 0;
     }
 
@@ -733,8 +737,8 @@ class Program
         Newtonsoft.Json.Linq.JContainer jContainer = (Newtonsoft.Json.Linq.JContainer)JsonConvert.DeserializeObject(configJson);
 
         Key.key = jContainer["key"].ToString();
-        Key.secret= jContainer["secret"].ToString();
-        initialValue = decimal.Parse( jContainer["initialValue"].ToString(),System.Globalization.NumberStyles.Float);
+        Key.secret = jContainer["secret"].ToString();
+        initialValue = decimal.Parse(jContainer["initialValue"].ToString(), System.Globalization.NumberStyles.Float);
         percValue = decimal.Parse(jContainer["percValue"].ToString(), System.Globalization.NumberStyles.Float);
     }
 
@@ -780,7 +784,7 @@ class Program
         //    Console.WriteLine(i.ToString());
         //}
 
-    
+
 
 
 
