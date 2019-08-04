@@ -18,6 +18,7 @@ initialValue é o total de BTC que você irá fazer por ordem(recomendo no minim
 percValue valor de lucro no qual ele irá realizar a arbitragem(recomendo o superior as 3 taxas somadas no caso acima maior que 0.3, default 0.35)
 
 {
+
  key : "SUA_KEY_AQUI",
  
  secret: "SUA_SECRET_AQUI",
@@ -25,5 +26,4 @@ percValue valor de lucro no qual ele irá realizar a arbitragem(recomendo o supe
  initialValue: 0.003,
  
  percValue: 0.35
- 
 }
