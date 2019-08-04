@@ -16,9 +16,14 @@ Configuração:
 Criar um arquivo JSON na pasta do executavel com o nome "config.json", conteudo para configuracao:
 initialValue é o total de BTC que você irá fazer por ordem(recomendo no minimo o equivalante a 10 dolares).
 percValue valor de lucro no qual ele irá realizar a arbitragem(recomendo o superior as 3 taxas somadas no caso acima maior que 0.3, default 0.35)
+
 {
  key : "SUA_KEY_AQUI",
+ 
  secret: "SUA_SECRET_AQUI",
+ 
  initialValue: 0.003,
+ 
  percValue: 0.35
+ 
 }
