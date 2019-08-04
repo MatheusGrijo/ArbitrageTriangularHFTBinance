@@ -28,3 +28,5 @@ percValue valor de lucro no qual ele irá realizar a arbitragem(recomendo o supe
  percValue: 0.35
  
 }
+
+*Criar uma pasta na raiz(windows) chama c:\bot\ ali ira conter os logs de acompanhamento.
