@@ -179,6 +179,78 @@ class Program
                 sb.Append(pairs);
         }
 
+        market = "BTC";
+        foreach (var item in ExchangeBinance.exchangeInfo["symbols"])
+        {
+            String pairs = "";
+            bool add = false;
+            if (item["symbol"].ToString().Substring(item["symbol"].ToString().Length - 3, 3) == market)
+            {
+                pairs += item["symbol"].ToString() + ":";
+                String auxPair = item["symbol"].ToString().Replace(market, "");
+                foreach (var item2 in ExchangeBinance.exchangeInfo["symbols"])
+                {
+                    if (item2["symbol"].ToString() == auxPair + "PAX")
+                        if (item2["status"].ToString().Trim().ToUpper() == "TRADING")
+                        {
+                            add = true;
+                            pairs += item2["symbol"].ToString() + ":";
+                            pairs += "BTCPAX;";
+                        }
+                }
+            }
+            if (add)
+                sb.Append(pairs);
+        }
+
+        market = "BTC";
+        foreach (var item in ExchangeBinance.exchangeInfo["symbols"])
+        {
+            String pairs = "";
+            bool add = false;
+            if (item["symbol"].ToString().Substring(item["symbol"].ToString().Length - 3, 3) == market)
+            {
+                pairs += item["symbol"].ToString() + ":";
+                String auxPair = item["symbol"].ToString().Replace(market, "");
+                foreach (var item2 in ExchangeBinance.exchangeInfo["symbols"])
+                {
+                    if (item2["symbol"].ToString() == auxPair + "USDC")
+                        if (item2["status"].ToString().Trim().ToUpper() == "TRADING")
+                        {
+                            add = true;
+                            pairs += item2["symbol"].ToString() + ":";
+                            pairs += "BTCUSDC;";
+                        }
+                }
+            }
+            if (add)
+                sb.Append(pairs);
+        }
+
+        market = "BTC";
+        foreach (var item in ExchangeBinance.exchangeInfo["symbols"])
+        {
+            String pairs = "";
+            bool add = false;
+            if (item["symbol"].ToString().Substring(item["symbol"].ToString().Length - 3, 3) == market)
+            {
+                pairs += item["symbol"].ToString() + ":";
+                String auxPair = item["symbol"].ToString().Replace(market, "");
+                foreach (var item2 in ExchangeBinance.exchangeInfo["symbols"])
+                {
+                    if (item2["symbol"].ToString() == auxPair + "TUSD")
+                        if (item2["status"].ToString().Trim().ToUpper() == "TRADING")
+                        {
+                            add = true;
+                            pairs += item2["symbol"].ToString() + ":";
+                            pairs += "TUSD;";
+                        }
+                }
+            }
+            if (add)
+                sb.Append(pairs);
+        }
+
 
 
         //sb.Clear();
@@ -257,7 +329,7 @@ class Program
                 return arbTriangle;
 
             }
-            else if (pairs[2] == "BTCUSDT")
+            else if (pairs[2] == "BTCUSDT" || pairs[2] == "BTCPAX" || pairs[2] == "BTCTUSD" || pairs[2] == "BTCUSDC")
             {
                 //XRPBTC BUY
                 //XRPUSDT SELL
@@ -541,12 +613,18 @@ class Program
 
         ds.Tables["Symbol"].Clear();
         loadDataDetailSocket("btcusdt");
+        loadDataDetailSocket("btcpax");
+        loadDataDetailSocket("btctusd");
+        loadDataDetailSocket("btcusdc");
         loadDataDetailSocket("ethbtc");
         loadDataDetailSocket("bnbbtc");
         loadDataDetailSocket("bnbeth");
         loadDataDetailSocket("ethbnb");
 
-
+        ds.Tables["Symbol"].Rows.Add("btcusdt");
+        ds.Tables["Symbol"].Rows.Add("btcpax");
+        ds.Tables["Symbol"].Rows.Add("btctusd");
+        ds.Tables["Symbol"].Rows.Add("btcusdc");
         ds.Tables["Symbol"].Rows.Add("ethbtc");
         ds.Tables["Symbol"].Rows.Add("bnbbtc");
         ds.Tables["Symbol"].Rows.Add("bnbeth");
@@ -690,7 +768,7 @@ class Program
 
     static void config()
     {
-        String configJson = System.IO.File.ReadAllText(location + "config.json");
+        String configJson = System.IO.File.ReadAllText(@"C:\bot\config.json");
         Newtonsoft.Json.Linq.JContainer jContainer = (Newtonsoft.Json.Linq.JContainer)JsonConvert.DeserializeObject(configJson);
 
         Key.key = jContainer["key"].ToString();
