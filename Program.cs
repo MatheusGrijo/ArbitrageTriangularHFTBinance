@@ -2,7 +2,6 @@
 using Binance.Net.Objects;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -97,9 +96,9 @@ class Program
                     if (item2["symbol"].ToString() == auxPair + "BTC")
                         if (item2["status"].ToString().Trim().ToUpper() == "TRADING")
                         {
-                        add = true;
-                        pairs += item2["symbol"].ToString() + ";";
-                    }
+                            add = true;
+                            pairs += item2["symbol"].ToString() + ";";
+                        }
                 }
             }
             if (add)
@@ -121,10 +120,10 @@ class Program
                     if (item2["symbol"].ToString() == auxPair + "ETH")
                         if (item2["status"].ToString().Trim().ToUpper() == "TRADING")
                         {
-                        add = true;
-                        pairs += item2["symbol"].ToString() + ":";
-                        pairs += "ETHBTC;";
-                    }
+                            add = true;
+                            pairs += item2["symbol"].ToString() + ":";
+                            pairs += "ETHBTC;";
+                        }
                 }
             }
             if (add)
@@ -145,10 +144,10 @@ class Program
                     if (item2["symbol"].ToString() == auxPair + "BNB")
                         if (item2["status"].ToString().Trim().ToUpper() == "TRADING")
                         {
-                        add = true;
-                        pairs += item2["symbol"].ToString() + ":";
-                        pairs += "BNBBTC;";
-                    }
+                            add = true;
+                            pairs += item2["symbol"].ToString() + ":";
+                            pairs += "BNBBTC;";
+                        }
                 }
             }
             if (add)
@@ -274,7 +273,7 @@ class Program
 
                 arbTriangle.perc = perc;
 
-                Console.WriteLine(Math.Round(perc, 3) + "% | " + pairs[0].ToString() + "(" + arbTriangle.amount1 + ") - " + pairs[1].ToString() + "(" + arbTriangle.amount2 + ") - " + pairs[2].ToString() + "(" + arbTriangle.finalvalue + ")");
+                //Console.WriteLine(Math.Round(perc, 3) + "% | " + pairs[0].ToString() + "(" + arbTriangle.amount1 + ") - " + pairs[1].ToString() + "(" + arbTriangle.amount2 + ") - " + pairs[2].ToString() + "(" + arbTriangle.finalvalue + ")");
                 return arbTriangle;
 
             }
@@ -581,14 +580,12 @@ class Program
         ds.Tables["Symbol"].Columns.Add("Pair");
 
         ds.Tables["Symbol"].Clear();
-        loadDataDetailSocket("ethbtc");
-        System.Threading.Thread.Sleep(1000);
-        loadDataDetailSocket("bnbbtc");
-        System.Threading.Thread.Sleep(1000);
-        loadDataDetailSocket("bnbeth");
-        System.Threading.Thread.Sleep(1000);
+        loadDataDetailSocket("btcusdt");
+        loadDataDetailSocket("ethbtc");        
+        loadDataDetailSocket("bnbbtc");        
+        loadDataDetailSocket("bnbeth");        
         loadDataDetailSocket("ethbnb");
-        System.Threading.Thread.Sleep(1000);
+        
 
         ds.Tables["Symbol"].Rows.Add("ethbtc");
         ds.Tables["Symbol"].Rows.Add("bnbbtc");
@@ -693,7 +690,6 @@ class Program
         markets = getArrayTriangularArbitrage();
 
         new Thread(initializeSockets).Start();
-        
 
         try
         {
